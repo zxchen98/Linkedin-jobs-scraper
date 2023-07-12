@@ -11,8 +11,8 @@ The Linkedin_scraper module is heavily borrowed from this [Github repo](https://
 pip install -r requirements.txt
 ```
 
-##
-Make sure you change the job-searching keywords inside the run.py (default is 'Python developer')
+## Run scraper
+Make sure you change the job-searching keywords inside the run.py (default is 'Python developer') and setted up the connection with your google sheet
 ```bash
 Python3 run.py
 ```
