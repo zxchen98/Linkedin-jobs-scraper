@@ -15,13 +15,16 @@ def job2df(job_listing):
 
         job_df = pd.DataFrame([i.to_dict()])
         df = pd.concat([df,job_df],axis = 0)
-    print("Begin Parsing....\n")
+    i.driver.close()
+    print("Parsing Jobs....\n")
     return df
 
 #!/usr/bin/env python
 # coding: utf-8
 
-
+'''
+simple helper function used to search for jobs requirements, will be rewriten in later version
+'''
 def find_requirements(string):
     if string:
         start = re.search("([rR]equire)|([Qq]ualifications)",string)
@@ -38,7 +41,9 @@ def find_requirements(string):
 
 # In[49]:
 
-
+'''
+helper funtion used to sort the posted dates
+'''
 def calculate_date(string):
     for i in range(len(string)):
         res = int(string[i].split(' ')[0])
@@ -68,7 +73,10 @@ def parse_df(jobs):
     
     #split columns
     jobs['location'] = jobs['company'].apply(lambda x:x.split('·')[1])
-    jobs['applicants'] = jobs['company'].apply(lambda x:int(x.split('·')[2][:-10].replace(',','')))
+    try:
+        jobs['applicants'] = jobs['company'].apply(lambda x:int(x.split('·')[2][:-10].replace(',','')))
+    except:
+        jobs['applicants'] = 0
     jobs['company'] = jobs['company'].apply(lambda x:x.split('·')[0])
     pattern = r"[0-9]+"
     jobs['posted_date'] = jobs['location'].apply(lambda x: x[re.search(pattern,x).start():])
@@ -83,11 +91,16 @@ def parse_df(jobs):
 
 # In[80]:
 
-
-def upload_df(jobs,path = 'C:/Users/Muggl/Desktop/linkedin-jobs-392523-00de46c464a4.json'):
-# Update the google spreadsheet 
+'''
+    The following function upload the parsed jobs dataframe into a online goodle sheets
+    Please enable google sheets API, google drive API and create your own credentials
+    put your key.json path inside path
+'''
+def upload_df(jobs, title, path):
+# Update the google spreadsheet
+    print("Uploading jobs...")
     gc=pygsheets.authorize(service_account_file=path)
-    sh = gc.open('daily_linkedin_jobs')
+    sh = gc.open(title)
     try:
         sh.add_worksheet(f"{str(date.today())}")
         current_sheet = sh.worksheets()[-1]
@@ -108,10 +121,10 @@ def upload_df(jobs,path = 'C:/Users/Muggl/Desktop/linkedin-jobs-392523-00de46c46
 # In[81]:
 
 
-def main(job_listings):
+def main(job_listings,title,key_path):
     jobs = job2df(job_listings)
     job_df = parse_df(jobs)
-    upload_df(job_df)
+    upload_df(job_df,title,key_path)
 
 
 
