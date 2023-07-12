@@ -32,8 +32,8 @@ def find_requirements(string):
         for i in requirements_ls:
             if len(i)<=5:
                 requirements_ls.remove(i)
-        return requirements_ls[1:]
-    return []
+        return '$'.join(requirements_ls[1:])
+    return ''
 
 
 # In[49]:
@@ -64,7 +64,7 @@ def calculate_date(string):
 def parse_df(jobs):
     jobs.drop(index=jobs.loc[jobs['already_applied'].isna()==False].index,inplace = True)
     # jobs.drop(index=jobs.loc[jobs['easy_apply'].isna()==False].index,inplace = True)
-    jobs.drop(columns=['Unnamed: 0','already_applied','applicant_count'],inplace = True)
+    jobs.drop(columns=['already_applied','applicant_count'],inplace = True)
     
     #split columns
     jobs['location'] = jobs['company'].apply(lambda x:x.split('·')[1])
@@ -76,7 +76,7 @@ def parse_df(jobs):
     
     jobs['requirements']=jobs['job_description'].apply(find_requirements)
     jobs.drop(columns=['job_description'],inplace=True)
-    jobs.sort_values(by = ['posted_date', 'applicants'], ascending = [True, True], inplace=True)
+    jobs.sort_values(by = 'posted_date', key = calculate_date, inplace=True)
     jobs = jobs[['job_title','linkedin_url','company','company_linkedin_url','location','posted_date','easy_apply','applicants','requirements','benefits']]
     return jobs
 
@@ -97,7 +97,7 @@ def upload_df(jobs,path = 'C:/Users/Muggl/Desktop/linkedin-jobs-392523-00de46c46
 
     current_sheet.set_dataframe(jobs,(1,1))
     res = []
-    for i in range(2,len(df)+2):
+    for i in range(2,len(jobs)+2):
         command = "=SUBSTITUTE(" + f"I{i}" + ',"$"'+",CHAR(10))"
         res.append([command])
     current_sheet.update_value("K1", "requirements_listed")

@@ -12,8 +12,8 @@ driver = webdriver.Chrome(options=options)
 
 # driver = webdriver.Chrome()
 
-email = "xiz643@ucsd.edu"
-password = "980521Zxc!"
+email = input()
+password = input()
 
 actions.login(driver, email, password) # if email and password isnt given, it'll prompt in terminal
 job_search = JobSearch(driver=driver, close_on_complete=False, scrape=False)
