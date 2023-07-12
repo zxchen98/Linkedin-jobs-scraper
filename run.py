@@ -1,6 +1,5 @@
-from linkedin_scraper import JobSearch, actions
+from linkedin_scraper import JobSearch, actions,parse
 from selenium import webdriver
-from parse import job2df
 from selenium.webdriver.chrome.options import Options
 
 chrome_options = Options()
@@ -27,5 +26,5 @@ job_listings_sde = job_search.search("Python Developer") # returns the list of `
 # job_listings_ds = job_search.search("Data Scientist")
 
 
-job2df(job_listings_sde)
+parse.main(job_listings_sde)
 # job2df(job_listings_ds)

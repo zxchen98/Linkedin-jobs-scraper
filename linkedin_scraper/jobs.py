@@ -23,7 +23,8 @@ class Job(Scraper):
         driver=None,
         close_on_complete=True,
         scrape=True,
-        already_applied = None
+        already_applied = None,
+        easy_apply = None,
     ):
         super().__init__()
         self.linkedin_url = linkedin_url
@@ -37,6 +38,7 @@ class Job(Scraper):
         self.job_description = job_description
         self.benefits = benefits
         self.already_applied = already_applied
+        self.easy_apply = easy_apply
 
         if scrape:
             self.scrape(close_on_complete)
@@ -61,7 +63,8 @@ class Job(Scraper):
             "applicant_count": self.applicant_count,
             "job_description": self.job_description,
             "benefits": self.benefits,
-            "already_applied":self.already_applied
+            "already_applied":self.already_applied,
+            'easy_apply':self.easy_apply
         }
 
 
@@ -71,6 +74,10 @@ class Job(Scraper):
         driver.get(self.linkedin_url)
         self.focus()
         self.job_title = self.wait_for_element_to_load(name="jobs-unified-top-card__job-title").text.strip()
+        try:
+            self.easy_apply = self.wait_for_element_to_load(name="jobs-apply-button").text.strip()
+        except:
+            self.easy_apply = ''
         self.company = self.wait_for_element_to_load(name="jobs-unified-top-card__primary-description").text.strip()
         try:
             self.company_linkedin_url = self.wait_for_element_to_load(name="jobs-unified-top-card__primary-description").find_element(By.TAG_NAME,"a").get_attribute("href")

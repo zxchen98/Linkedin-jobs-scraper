@@ -97,4 +97,5 @@ class JobSearch(Scraper):
                 job = self.scrape_job_card(job_card)
                 job_results.append(job)
             count+=1
+            return job_results #REMOVE THIS IN FINAL VERSION
         return job_results
