@@ -7,6 +7,14 @@ I found it very useful in my daily job search and it is convenient to keep track
 The Linkedin_scraper module is heavily borrowed from this [Github repo](https://github.com/joeyism/linkedin_scraper/tree/master) with some bug fixes and customizations, check it out if you want to scrape candidates' info or any other Linkedin features.
 
 ## Setup
+```bash
+pip install -r requirements.txt
+```
 
+##
+Make sure you change the job-searching keywords inside the run.py (default is 'Python developer')
+```bash
+Python3 run.py
+```
 
 
